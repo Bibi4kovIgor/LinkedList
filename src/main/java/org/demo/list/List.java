@@ -1,6 +1,8 @@
 package org.demo.list;
 
-public interface List<T> {
+import java.util.stream.Stream;
+
+public interface List<T> extends Iterable<T>, Comparable<T> {
     void add(T element);
     void addAll(T[] array);
     void appendAll(T[] array);
@@ -12,7 +14,16 @@ public interface List<T> {
     boolean removeFirst();
     T getFirst();
     T getLast();
-    boolean update(T oldValue, T newValue);
+    boolean updateFirst(T oldValue, T newValue);
+    boolean set(int index, T newValue);
+    boolean updateAll(T oldValue, T newValue);
     Object[] getAll();
-    T getElementByIndex();
+    T getElementByIndex(int index);
+    /**
+     * Default - ASC
+     * if @order == false -> DESC
+     * */
+    void sort(boolean order);
+
+    Stream<T> stream();
 }

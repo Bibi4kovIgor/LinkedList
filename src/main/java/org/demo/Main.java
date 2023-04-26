@@ -22,12 +22,18 @@ public class Main {
 
         Integer[] array = {45, 78, 123, -87, 1, 0, 6};
         integerList.addAll(array);
-        System.out.println(integerList);
+
+        for (Integer integer : integerList) {
+            System.out.printf("%d ",integer);
+        }
+        System.out.println();
+
+        integerList.forEach(System.out::println);
+
+
 
         Integer[] array2 = {2, 11, 3};
         integerList.appendAll(array2);
-        System.out.println(integerList);
-
 
     }
 }
