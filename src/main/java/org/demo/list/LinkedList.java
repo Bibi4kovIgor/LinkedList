@@ -1,49 +1,9 @@
 package org.demo.list;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
-public class LinkedList<T> implements List<T> {
-
-    /**
-     * Compares this object with the specified object for order.  Returns a
-     * negative integer, zero, or a positive integer as this object is less
-     * than, equal to, or greater than the specified object.
-     *
-     * <p>The implementor must ensure {@link Integer#signum
-     * signum}{@code (x.compareTo(y)) == -signum(y.compareTo(x))} for
-     * all {@code x} and {@code y}.  (This implies that {@code
-     * x.compareTo(y)} must throw an exception if and only if {@code
-     * y.compareTo(x)} throws an exception.)
-     *
-     * <p>The implementor must also ensure that the relation is transitive:
-     * {@code (x.compareTo(y) > 0 && y.compareTo(z) > 0)} implies
-     * {@code x.compareTo(z) > 0}.
-     *
-     * <p>Finally, the implementor must ensure that {@code
-     * x.compareTo(y)==0} implies that {@code signum(x.compareTo(z))
-     * == signum(y.compareTo(z))}, for all {@code z}.
-     *
-     * @param o the object to be compared.
-     * @return a negative integer, zero, or a positive integer as this object
-     * is less than, equal to, or greater than the specified object.
-     * @throws NullPointerException if the specified object is null
-     * @throws ClassCastException   if the specified object's type prevents it
-     *                              from being compared to this object.
-     * @apiNote It is strongly recommended, but <i>not</i> strictly required that
-     * {@code (x.compareTo(y)==0) == (x.equals(y))}.  Generally speaking, any
-     * class that implements the {@code Comparable} interface and violates
-     * this condition should clearly indicate this fact.  The recommended
-     * language is "Note: this class has a natural ordering that is
-     * inconsistent with equals."
-     */
-    @Override
-    public int compareTo(T o) {
-        return 0;
-    }
+public class LinkedList<E extends Comparable<E>> implements List<E> {
 
     /**
      * Returns an iterator over elements of type {@code T}.
@@ -51,11 +11,16 @@ public class LinkedList<T> implements List<T> {
      * @return an Iterator.
      */
     @Override
-    public Iterator<T> iterator() {
+    public Iterator<E> iterator() {
         return new ListIterator();
     }
-    private final class ListIterator implements Iterator<T> {
-        private Node<T> current;
+
+    private Comparator<E> reverseComparator() {
+        return new ReversedListComparator();
+    }
+
+    private final class ListIterator implements Iterator<E> {
+        private Node<E> current;
         private int index;
 
         public ListIterator() {
@@ -74,7 +39,7 @@ public class LinkedList<T> implements List<T> {
         }
 
         @Override
-        public T next() {
+        public E next() {
 
             if (!hasNext()) {
                 throw new IllegalArgumentException("Element doesn't exists");
@@ -92,6 +57,168 @@ public class LinkedList<T> implements List<T> {
     }
 
 
+    private final class ListComparator implements Comparator<E> {
+
+        /**
+         * Compares its two arguments for order.  Returns a negative integer,
+         * zero, or a positive integer as the first argument is less than, equal
+         * to, or greater than the second.<p>
+         * <p>
+         * The implementor must ensure that {@link Integer#signum
+         * signum}{@code (compare(x, y)) == -signum(compare(y, x))} for
+         * all {@code x} and {@code y}.  (This implies that {@code
+         * compare(x, y)} must throw an exception if and only if {@code
+         * compare(y, x)} throws an exception.)<p>
+         * <p>
+         * The implementor must also ensure that the relation is transitive:
+         * {@code ((compare(x, y)>0) && (compare(y, z)>0))} implies
+         * {@code compare(x, z)>0}.<p>
+         * <p>
+         * Finally, the implementor must ensure that {@code compare(x,
+         * y)==0} implies that {@code signum(compare(x,
+         * z))==signum(compare(y, z))} for all {@code z}.
+         *
+         * @param o1 the first object to be compared.
+         * @param o2 the second object to be compared.
+         * @return a negative integer, zero, or a positive integer as the
+         * first argument is less than, equal to, or greater than the
+         * second.
+         * @throws NullPointerException if an argument is null and this
+         *                              comparator does not permit null arguments
+         * @throws ClassCastException   if the arguments' types prevent them from
+         *                              being compared by this comparator.
+         * @apiNote It is generally the case, but <i>not</i> strictly required that
+         * {@code (compare(x, y)==0) == (x.equals(y))}.  Generally speaking,
+         * any comparator that violates this condition should clearly indicate
+         * this fact.  The recommended language is "Note: this comparator
+         * imposes orderings that are inconsistent with equals."
+         */
+        @Override
+        public int compare(E o1, E o2) {
+            return o1.compareTo(o2);
+        }
+
+/*        *//**
+         * Returns a comparator that imposes the reverse ordering of this
+         * comparator.
+         *
+         * @return a comparator that imposes the reverse ordering of this
+         * comparator.
+         * @since 1.8
+         */
+        @Override
+        public Comparator<E> reversed() {
+            return new ReversedListComparator();
+        }
+    }
+    private final class ReversedListComparator implements Comparator<E> {
+        /**
+         * Compares its two arguments for order.  Returns a negative integer,
+         * zero, or a positive integer as the first argument is less than, equal
+         * to, or greater than the second.<p>
+         * <p>
+         * The implementor must ensure that {@link Integer#signum
+         * signum}{@code (compare(x, y)) == -signum(compare(y, x))} for
+         * all {@code x} and {@code y}.  (This implies that {@code
+         * compare(x, y)} must throw an exception if and only if {@code
+         * compare(y, x)} throws an exception.)<p>
+         * <p>
+         * The implementor must also ensure that the relation is transitive:
+         * {@code ((compare(x, y)>0) && (compare(y, z)>0))} implies
+         * {@code compare(x, z)>0}.<p>
+         * <p>
+         * Finally, the implementor must ensure that {@code compare(x,
+         * y)==0} implies that {@code signum(compare(x,
+         * z))==signum(compare(y, z))} for all {@code z}.
+         *
+         * @param o1 the first object to be compared.
+         * @param o2 the second object to be compared.
+         * @return a negative integer, zero, or a positive integer as the
+         * first argument is less than, equal to, or greater than the
+         * second.
+         * @throws NullPointerException if an argument is null and this
+         *                              comparator does not permit null arguments
+         * @throws ClassCastException   if the arguments' types prevent them from
+         *                              being compared by this comparator.
+         * @apiNote It is generally the case, but <i>not</i> strictly required that
+         * {@code (compare(x, y)==0) == (x.equals(y))}.  Generally speaking,
+         * any comparator that violates this condition should clearly indicate
+         * this fact.  The recommended language is "Note: this comparator
+         * imposes orderings that are inconsistent with equals."
+         */
+        @Override
+        public int compare(E o1, E o2) {
+            return o2.compareTo(o1);
+        }
+
+        /**
+         * Returns a comparator that imposes the reverse ordering of this
+         * comparator.
+         *
+         * @return a comparator that imposes the reverse ordering of this
+         * comparator.
+         * @since 1.8
+         */
+        @Override
+        public Comparator<E> reversed() {
+            return new ListComparator();
+        }
+    }
+
+    private record CompareByStringKey(String sortKey) implements Comparator<String> {
+
+    /**
+         * Compares its two arguments for order.  Returns a negative integer,
+         * zero, or a positive integer as the first argument is less than, equal
+         * to, or greater than the second.<p>
+         * <p>
+         * The implementor must ensure that {@link Integer#signum
+         * signum}{@code (compare(x, y)) == -signum(compare(y, x))} for
+         * all {@code x} and {@code y}.  (This implies that {@code
+         * compare(x, y)} must throw an exception if and only if {@code
+         * compare(y, x)} throws an exception.)<p>
+         * <p>
+         * The implementor must also ensure that the relation is transitive:
+         * {@code ((compare(x, y)>0) && (compare(y, z)>0))} implies
+         * {@code compare(x, z)>0}.<p>
+         * <p>
+         * Finally, the implementor must ensure that {@code compare(x,
+         * y)==0} implies that {@code signum(compare(x,
+         * z))==signum(compare(y, z))} for all {@code z}.
+         *
+         * @param str1 the first object to be compared.
+         * @param str2 the second object to be compared.
+         * @return a negative integer, zero, or a positive integer as the
+         * first argument is less than, equal to, or greater than the
+         * second.
+         * @throws NullPointerException if an argument is null and this
+         *                              comparator does not permit null arguments
+         * @throws ClassCastException   if the arguments' types prevent them from
+         *                              being compared by this comparator.
+         * @apiNote It is generally the case, but <i>not</i> strictly required that
+         * {@code (compare(x, y)==0) == (x.equals(y))}.  Generally speaking,
+         * any comparator that violates this condition should clearly indicate
+         * this fact.  The recommended language is "Note: this comparator
+         * imposes orderings that are inconsistent with equals."
+         */
+        @Override
+        public int compare(String str1, String str2) {
+            int pos1 = 0;
+            int pos2 = 0;
+
+            for (int i = 0; i < Math.min(str1.length(), str2.length()) && pos1 == pos2; i++) {
+                pos1 = sortKey.indexOf(str1.charAt(i));
+                pos2 = sortKey.indexOf(str2.charAt(i));
+            }
+
+            if (pos1 == pos2 && str1.length() != str2.length()) {
+                return str1.length() - str2.length();
+            }
+
+            return pos1 - pos2;
+        }
+    }
+
     private static final class Node<T> {
         T value;
         Node<T> next;
@@ -108,10 +235,16 @@ public class LinkedList<T> implements List<T> {
             this.previous = null;
             this.next = null;
         }
+
+        public Node() {
+            this.value = null;
+            this.previous = null;
+            this.next = null;
+        }
     }
 
-    private Node<T> first;
-    private Node<T> last;
+    private Node<E> first;
+    private Node<E> last;
     private int size;
 
 
@@ -127,7 +260,7 @@ public class LinkedList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value) {
+    public void add(E value) {
         if (size == 0) {
             addElementToFirstPosition(value);
         } else {
@@ -136,13 +269,13 @@ public class LinkedList<T> implements List<T> {
     }
 
     @Override
-    public void addAll(T[] array) {
+    public void addAll(E[] array) {
         clear();
         addAllElements(array);
     }
 
     @Override
-    public void addByIndex(T value, int position) {
+    public void addByIndex(E value, int position) {
         if (position > size || position < 0) {
             return;
         }
@@ -156,52 +289,16 @@ public class LinkedList<T> implements List<T> {
         }
     }
 
-    /**
-     * @param index
-     * @param newValue
-     * @return
-     */
-    @Override
-    public boolean set(int index, T newValue) {
-        return false;
-    }
-
-    /**
-     * @param oldValue
-     * @param newValue
-     * @return
-     */
-    @Override
-    public boolean updateAll(T oldValue, T newValue) {
-        return false;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public Stream<T> stream() {
-        return null;
-    }
-
-    /**
-     * @param index
-     * @return
-     */
-    @Override
-    public T getElementByIndex(int index) {
-        return null;
-    }
 
     @Override
     public String toString() {
-        return Arrays.asList(getAll()).toString();
+        return Arrays.asList(toArray()).toString();
     }
 
     @Override
-    public Object[] getAll() {
+    public Object[] toArray() {
         Object[] result = new Object[size];
-        Node<T> temp = first;
+        Node<E> temp = first;
         int i = 0;
         while (Objects.nonNull(temp)){
             result[i] = temp.value;
@@ -211,22 +308,49 @@ public class LinkedList<T> implements List<T> {
         return result;
     }
 
-    /**
-     *
-     * This is homework!
-     * TODO: implement all needed methods
-     *
-     */
     @Override
-    public boolean remove(T value) {
-        // TODO: add implementation
-        return false;
+    public boolean remove(int index) {
+        if (index < 0 || index > size) {
+            return false;
+        }
+
+        Node<E> element = getElementByIndex(index);
+        Node<E> previous = element.previous;
+        Node<E> next = element.next;
+
+        previous.next = element.next;
+        next.previous = previous;
+        element.previous = null;
+
+        size--;
+        return true;
     }
 
     @Override
-    public boolean updateFirst(T oldValue, T newValue) {
-        // TODO: add implementation
-        return false;
+    public boolean removeFirst(E value) {
+        int index = getElementByValue(value);
+        if (index < 0 || isEmptyList()) {
+            return false;
+        }
+
+        remove(index);
+        return true;
+    }
+
+    @Override
+    public boolean updateFirst(E oldValue, E newValue) {
+        if (isEmptyList()) {
+            return false;
+        }
+
+        int index = getElementByValue(oldValue);
+
+        if (index < 0) {
+            return false;
+        }
+
+        set(index, newValue);
+        return true;
     }
 
     /**
@@ -236,37 +360,111 @@ public class LinkedList<T> implements List<T> {
      *
      */
     @Override
-    public void appendAll(T[] array) {
-        // TODO: implement method
+    public void appendAll(E[] array) {
+        for (E value : array) {
+            add(value);
+        }
+    }
+
+
+    @Override
+    public E getFirst() {
+        if (isEmptyList()) {
+            return new Node<E>().value;
+        }
+
+        return first.value;
     }
 
     @Override
-    public boolean removeFirst() {
-        // TODO: implement method
-        return false;
+    public E getLast() {
+        if (isEmptyList()) {
+            return new Node<E>().value;
+        }
+
+        return last.value;
     }
 
     @Override
-    public T getFirst() {
-        // TODO: implement method
+    public boolean set(int index, E newValue) {
+        if (index < 0 || index > size || isEmptyList()) {
+            return false;
+        }
+
+        Node<E> element = getElementByIndex(index);
+        element.value = newValue;
+        return true;
+    }
+
+
+    @Override
+    public void updateAll(E oldValue, E newValue) {
+        if (isEmptyList()) {
+            return;
+        }
+
+        Node<E> temp = first;
+        for(int i = 0; i < size; i++) {
+            if (Objects.equals(temp.value, oldValue)) {
+                set(i, newValue);
+            }
+            temp = temp.next;
+        }
+    }
+
+    @Override
+    public Stream<E> stream() {
         return null;
     }
 
     @Override
-    public T getLast() {
-        // TODO: implement method
-        return null;
+    public E getByIndex(int index) {
+        Node<E> temp = first;
+        for (int i = 0; i < index; i++) {
+            temp = temp.next;
+        }
+        return temp.value;
     }
 
-    private void addElementToLastPosition(T value) {
-        Node<T> newNode = new Node<>(value, null, last);
+    /**
+    *
+      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public void sort(boolean order) {
+        Object[] array = toArray();
+
+        if (order) {
+            Arrays.sort(array);
+        } else {
+            Arrays.sort(array, (Comparator) reverseComparator());
+        }
+
+        for (int i = 0; i < array.length; i++) {
+            set(i, (E)array[i]);
+        }
+    }
+
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public void sortByStringKey(String key) {
+        Object[] array = toArray();
+        Arrays.sort(array, (Comparator) new CompareByStringKey(key));
+        for (int i = 0; i < array.length; i++) {
+            set(i, (E) array[i]);
+        }
+    }
+
+    private void addElementToLastPosition(E value) {
+        Node<E> newNode = new Node<>(value, null, last);
         last.next = newNode;
         last = newNode;
         size++;
     }
 
-    private void addElementToFirstPosition(T value) {
-        Node<T> newNode = new Node<>(value);
+    private void addElementToFirstPosition(E value) {
+        Node<E> newNode = new Node<>(value);
         if (size == 0) {
             first = last = newNode;
         } else {
@@ -276,13 +474,10 @@ public class LinkedList<T> implements List<T> {
         size++;
     }
 
-    /**
-     * @param order
-     */
-    @Override
-    public void sort(boolean order) {
-
+    private boolean isEmptyList(){
+        return Objects.isNull(first);
     }
+
 
     /**
      *
@@ -291,9 +486,9 @@ public class LinkedList<T> implements List<T> {
      * then you'll move element on 3-rd position to the 4-rd and new element will be added to the 3-rd position.
      * So, you'll probably work with previous element's pointer.
      * */
-    private void addElementToMiddlePosition(T value, int position) {
-        Node<T> temp = first;
-        Node<T> newNode = new Node<>(value);
+    private void addElementToMiddlePosition(E value, int position) {
+        Node<E> temp = first;
+        Node<E> newNode = new Node<>(value);
         for (int i = 0; i < position - 1; i++) {
             temp = temp.next;
         }
@@ -302,14 +497,33 @@ public class LinkedList<T> implements List<T> {
         newNode.previous = temp.previous;
         size++;
     }
-    private void addAllElements(T[] array) {
-        for (T value : array) {
+    private void addAllElements(E[] array) {
+        for (E value : array) {
             if(size == 0) {
                 addElementToFirstPosition(value);
                 continue;
             }
             addElementToLastPosition(value);
         }
+    }
+
+    private Node<E> getElementByIndex(int index) {
+        Node<E> temp = first;
+        for (int i = 0; i < index; i++) {
+            temp = temp.next;
+        }
+        return temp;
+    }
+
+    private int getElementByValue(E value) {
+        Node<E> temp = first;
+        for(int i = 0; i < size; i++) {
+            if (temp.value.equals(value)) {
+                return i;
+            }
+            temp = temp.next;
+        }
+        return Integer.MIN_VALUE;
     }
 
 
