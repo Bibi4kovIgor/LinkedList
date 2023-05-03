@@ -74,13 +74,13 @@ public class Main {
         Person[] persons = { new Person("Ihor", 1L,31),
                              new Person("Illya", 2L,23)};
 
-        List<Person> personList = new LinkedList<>();
-        personList.addAll(persons);
-        personList.sort(true);
-        System.out.println(personList);
+        List<Person> personsList = new LinkedList<>();
+        personsList.addAll(persons);
+        personsList.sort(true);
+        System.out.println(personsList);
 
-        personList.sort(false);
-        System.out.println(personList);
+        personsList.sort(false);
+        System.out.println(personsList);
 
         List<String> stringsList = new LinkedList<>();
         String[] strings = {"qwe", "asd", "dwe"};
@@ -89,9 +89,13 @@ public class Main {
         stringsList.sortByStringKey("aqd");
         System.out.println(stringsList);
 
+        System.out.println(personsList.stream()
+                        .filter(person -> person.getAge() > 30)
+                        .toList());
 
-
-
+        System.out.println(personsList.stream()
+                        .filter(person -> person.getAge() < 24)
+                        .toList());
 
     }
 }

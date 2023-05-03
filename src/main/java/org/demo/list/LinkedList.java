@@ -2,6 +2,7 @@ package org.demo.list;
 
 import java.util.*;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class LinkedList<E extends Comparable<E>> implements List<E> {
 
@@ -413,11 +414,6 @@ public class LinkedList<E extends Comparable<E>> implements List<E> {
     }
 
     @Override
-    public Stream<E> stream() {
-        return null;
-    }
-
-    @Override
     public E getByIndex(int index) {
         Node<E> temp = first;
         for (int i = 0; i < index; i++) {
@@ -454,6 +450,12 @@ public class LinkedList<E extends Comparable<E>> implements List<E> {
         for (int i = 0; i < array.length; i++) {
             set(i, (E) array[i]);
         }
+    }
+
+    @Override
+    public Stream<E> stream() {
+        Spliterator<E> spliterator = Spliterators.spliteratorUnknownSize(iterator(), Spliterator.SIZED);
+        return StreamSupport.stream(spliterator, true);
     }
 
     private void addElementToLastPosition(E value) {

@@ -1,18 +1,18 @@
 package org.demo.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.Objects;
 
+@AllArgsConstructor
+@Data
 public class Person implements Comparable<Person>{
     private final String name;
     private final Long id;
 
     private final int age;
 
-    public Person(String name, Long id, int age) {
-        this.name = name;
-        this.id = id;
-        this.age = age;
-    }
 
     /**
      * Compares this object with the specified object for order.  Returns a
