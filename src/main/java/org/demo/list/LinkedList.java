@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class LinkedList<E extends Comparable<E>> implements List<E> {
+public class LinkedList<E extends Comparable<? super E>> implements List<E> {
 
     /**
      * Returns an iterator over elements of type {@code T}.
@@ -18,6 +18,10 @@ public class LinkedList<E extends Comparable<E>> implements List<E> {
 
     private Comparator<E> reverseComparator() {
         return new ReversedListComparator();
+    }
+
+    private Comparator<E> comparator() {
+        return new ListComparator();
     }
 
     private final class ListIterator implements Iterator<E> {
@@ -220,18 +224,18 @@ public class LinkedList<E extends Comparable<E>> implements List<E> {
         }
     }
 
-    private static final class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> previous;
+    private static final class Node<E> {
+        E value;
+        Node<E> next;
+        Node<E> previous;
 
-        public Node(T value, Node<T> next, Node<T> previous) {
+        public Node(E value, Node<E> next, Node<E> previous) {
             this.value = value;
             this.next = next;
             this.previous = previous;
         }
 
-        public Node(T value) {
+        public Node(E value) {
             this.value = value;
             this.previous = null;
             this.next = null;
@@ -315,6 +319,21 @@ public class LinkedList<E extends Comparable<E>> implements List<E> {
             return false;
         }
 
+        if (size == 1) {
+            first = last = null;
+        }
+
+        if (index == 0) {
+            removeFirstElement();
+            return true;
+        }
+
+        if (index == size -1) {
+            removeLastElement();
+            return true;
+
+        }
+
         Node<E> element = getElementByIndex(index);
         Node<E> previous = element.previous;
         Node<E> next = element.next;
@@ -325,6 +344,22 @@ public class LinkedList<E extends Comparable<E>> implements List<E> {
 
         size--;
         return true;
+    }
+
+    private void removeLastElement() {
+        Node<E> removedElement = last;
+        last = last.previous;
+        removedElement.previous = null;
+        last.next = null;
+        size--;
+    }
+
+    private void removeFirstElement() {
+        Node<E> removedElement = first;
+        first = first.next;
+        removedElement.next = null;
+        first.previous = null;
+        size--;
     }
 
     @Override
@@ -431,7 +466,7 @@ public class LinkedList<E extends Comparable<E>> implements List<E> {
         Object[] array = toArray();
 
         if (order) {
-            Arrays.sort(array);
+            Arrays.sort(array, (Comparator) comparator());
         } else {
             Arrays.sort(array, (Comparator) reverseComparator());
         }

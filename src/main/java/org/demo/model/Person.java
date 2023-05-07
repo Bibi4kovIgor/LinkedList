@@ -51,19 +51,6 @@ public class Person implements Comparable<Person>{
         return age - person.age;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return age == person.age && Objects.equals(name, person.name) && Objects.equals(id, person.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, id, age);
-    }
-
     /**
      * Returns a string representation of the object.
      *
@@ -93,4 +80,15 @@ public class Person implements Comparable<Person>{
                               name, age, id);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person person)) return false;
+        return age == person.age && name.equals(person.name) && id.equals(person.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, id, age);
+    }
 }

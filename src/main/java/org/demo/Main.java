@@ -10,6 +10,16 @@ public class Main {
         Integer[] array = {45, 78, 123, -87, 1, 0, 6};
         integerList.addAll(array);
 
+
+        System.out.println(integerList);
+        integerList.remove(integerList.size() - 1);
+
+        System.out.println(integerList);
+
+        integerList.remove(0);
+        System.out.println(integerList);
+
+
         for (Integer integer : integerList) {
             System.out.printf("%d ",integer);
         }
@@ -71,6 +81,8 @@ public class Main {
         integerList.sort(false);
         System.out.println(integerList);
 
+
+
         Person[] persons = { new Person("Ihor", 1L,31),
                              new Person("Illya", 2L,23)};
 
@@ -96,6 +108,10 @@ public class Main {
         System.out.println(personsList.stream()
                         .filter(person -> person.getAge() < 24)
                         .toList());
+
+
+
+
 
     }
 }
