@@ -23,5 +23,6 @@ public interface List<E> extends Iterable<E> {
     E getByIndex(int index);
     void sort(boolean order);
     void sortByStringKey(String key);
-    Stream<E> stream();
+    Stream <E> stream();
+
 }

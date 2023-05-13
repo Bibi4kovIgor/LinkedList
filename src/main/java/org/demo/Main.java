@@ -6,6 +6,17 @@ import org.demo.model.Person;
 
 public class Main {
     public static void main(String[] args) {
+
+        Integer[] a = new Integer[1];
+        Integer[] a1 = null;
+        List<Integer> list = new LinkedList<>();
+        list.addAll(a);
+        list.addAll(a1);
+
+
+        System.out.println("Program is continue to work");
+        System.exit(0);
+
         List<Integer> integerList = new LinkedList<>();
         Integer[] array = {45, 78, 123, -87, 1, 0, 6};
         integerList.addAll(array);
@@ -104,13 +115,6 @@ public class Main {
         System.out.println(personsList.stream()
                         .filter(person -> person.getAge() > 30)
                         .toList());
-
-        System.out.println(personsList.stream()
-                        .filter(person -> person.getAge() < 24)
-                        .toList());
-
-
-
 
 
     }

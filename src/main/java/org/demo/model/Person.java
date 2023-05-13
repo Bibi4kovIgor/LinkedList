@@ -1,17 +1,19 @@
 package org.demo.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class Person implements Comparable<Person>{
-    private final String name;
-    private final Long id;
+    private String name;
+    private Long id;
 
-    private final int age;
+    private int age;
 
 
     /**

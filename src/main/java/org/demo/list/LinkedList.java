@@ -1,10 +1,16 @@
 package org.demo.list;
 
+import org.demo.exception.ListIsEmptyException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class LinkedList<E extends Comparable<? super E>> implements List<E> {
+
+    Logger logger = LoggerFactory.getLogger(String.format("Ihor Bibichkov class: %s", LinkedList.class));
 
     /**
      * Returns an iterator over elements of type {@code T}.
@@ -273,10 +279,23 @@ public class LinkedList<E extends Comparable<? super E>> implements List<E> {
         }
     }
 
+
     @Override
     public void addAll(E[] array) {
+        try {
+            checkEmptyArray(array);
+        } catch (ListIsEmptyException e) {
+            logger.warn(e.getMessage());
+            return;
+        }
         clear();
         addAllElements(array);
+    }
+
+    private void checkEmptyArray(E[] array) throws ListIsEmptyException {
+        if (Objects.isNull(array) || array.length == 0) {
+            throw new ListIsEmptyException("Internal array is empty or null");
+        }
     }
 
     @Override
@@ -315,9 +334,7 @@ public class LinkedList<E extends Comparable<? super E>> implements List<E> {
 
     @Override
     public boolean remove(int index) {
-        if (index < 0 || index > size) {
-            return false;
-        }
+        checkEmptyList(index);
 
         if (size == 1) {
             first = last = null;
@@ -344,6 +361,12 @@ public class LinkedList<E extends Comparable<? super E>> implements List<E> {
 
         size--;
         return true;
+    }
+
+    private void checkEmptyList(int index) {
+        if (index < 0 || index > size) {
+            logger.warn("Try to remove element with not existed index");
+        }
     }
 
     private void removeLastElement() {
