@@ -288,8 +288,12 @@ public class LinkedList<E extends Comparable<? super E>> implements List<E> {
             logger.warn(e.getMessage());
             return;
         }
+
         clear();
-        addAllElements(array);
+
+        for (E value : array) {
+            add(value);
+        }
     }
 
     private void checkEmptyArray(E[] array) throws ListIsEmptyException {
@@ -334,7 +338,9 @@ public class LinkedList<E extends Comparable<? super E>> implements List<E> {
 
     @Override
     public boolean remove(int index) {
-        checkEmptyList(index);
+        if(checkEmptyList(index)) {
+            return false;
+        }
 
         if (size == 1) {
             first = last = null;
@@ -363,10 +369,12 @@ public class LinkedList<E extends Comparable<? super E>> implements List<E> {
         return true;
     }
 
-    private void checkEmptyList(int index) {
-        if (index < 0 || index > size) {
+    private boolean checkEmptyList(int index) {
+        if (index <= 0 || index > size) {
             logger.warn("Try to remove element with not existed index");
+            return true;
         }
+        return false;
     }
 
     private void removeLastElement() {
@@ -556,15 +564,6 @@ public class LinkedList<E extends Comparable<? super E>> implements List<E> {
         temp.next = newNode;
         newNode.previous = temp.previous;
         size++;
-    }
-    private void addAllElements(E[] array) {
-        for (E value : array) {
-            if(size == 0) {
-                addElementToFirstPosition(value);
-                continue;
-            }
-            addElementToLastPosition(value);
-        }
     }
 
     private Node<E> getElementByIndex(int index) {

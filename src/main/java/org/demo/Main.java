@@ -6,12 +6,23 @@ import org.demo.model.Person;
 
 public class Main {
     public static void main(String[] args) {
+        int a = 5;
+        int b = 3;
+        int temp = a;
+        a = b;
+        b = temp;
+        System.out.println("a = " + a + "\nb = " + b);
 
-        Integer[] a = new Integer[1];
-        Integer[] a1 = null;
-        List<Integer> list = new LinkedList<>();
-        list.addAll(a);
-        list.addAll(a1);
+
+
+        System.exit(0);
+//
+//        Integer[] a = new Integer[1];
+//        Integer[] a1 = null;
+//        List<Integer> list = new LinkedList<>();
+//        list.addAll(a);
+//        list.addAll(a1);
+//        list.remove(0);
 
 
         System.out.println("Program is continue to work");
