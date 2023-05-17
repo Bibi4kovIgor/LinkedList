@@ -50,11 +50,33 @@ class LinkedListTest {
     }
 
     @Test
-    void addAll() {
+    void addByIndexElementToList_addFirstElement_ElementWasAdded() {
+        // Arrange
+        integerList.addAll(ARRAY_DATA);
+        int expected = 7;
+
+        // Act
+        integerList.addByIndex(expected, 0);
+        int actual = integerList.getFirst();
+
+        // Assert
+        assertEquals(expected, actual);
     }
 
     @Test
-    void addByIndex() {
+    void addByIndexElementToList_addElementBySpecifiedIndex_Throws() {
+        // Arrange
+        integerList.addAll(ARRAY_DATA);
+        int value = 1;
+
+        // Act & Assert
+        assertThrows(IndexOutOfBoundsException.class, () -> integerList.addByIndex(value, -1));
+    }
+
+
+
+    @Test
+    void addAll() {
     }
 
     @Test

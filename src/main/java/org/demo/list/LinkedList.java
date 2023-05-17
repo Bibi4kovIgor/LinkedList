@@ -305,7 +305,7 @@ public class LinkedList<E extends Comparable<? super E>> implements List<E> {
     @Override
     public void addByIndex(E value, int position) {
         if (position > size || position < 0) {
-            return;
+            throw new IndexOutOfBoundsException();
         }
 
         if (position == 0) {
