@@ -14,7 +14,6 @@ public class Main {
         System.out.println("a = " + a + "\nb = " + b);
 
 
-
         System.exit(0);
 //
 //        Integer[] a = new Integer[1];

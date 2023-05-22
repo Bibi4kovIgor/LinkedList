@@ -19,7 +19,11 @@ class LinkedListTest {
     }
 
     @Test
-    void size() {
+    void sizeOfList_getListSize_returnIntegerValueOfSize() {
+        int expectedSize = 6;
+        integerList.addAll(ARRAY_DATA);
+        int actualSize = integerList.size();
+        assertEquals(expectedSize, actualSize);
     }
 
     @Test
